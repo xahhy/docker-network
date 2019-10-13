@@ -1,0 +1,9 @@
+version: "3"
+services:
+  app3:
+    build: .
+    working_dir: /app3
+    volumes:
+      - "./app3:/app3"
+    command: "node index.js"
+    network_mode: "container:share_network_pause"

@@ -1,0 +1,33 @@
+version: "3"
+services:
+  pause:
+    image: alpine:latest
+    container_name: share_network_pause
+    ports:
+      - "8082:82"
+      - "8081:81"
+    command: sh -c 'while true;do sleep 10;echo pause keep-alive;done'
+    networks:
+      pause:
+  app1:
+    build: .
+    working_dir: /app1
+    volumes:
+      - "./app1:/app1"
+    ports:
+      - "8082:82"
+    command: "node index.js"
+    network_mode: "service:pause"
+    depends_on:
+      - pause
+  app2:
+    build: .
+    working_dir: /app2
+    volumes:
+      - "./app2:/app2"
+    command: "node index.js"
+    network_mode: "service:pause"
+    depends_on:
+      - pause
+networks:
+  pause:
